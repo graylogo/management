@@ -12,9 +12,9 @@ const { session } = require('passport');
 // $route GET api/users/test
 // @desc  返回请求的JSON数据
 // access  public
-router.get('/test',(req,res)=>{
-    res.json({msg: 'json数据'})
-})
+// router.get('/test',(req,res)=>{
+//     res.json({msg: 'json数据'})
+// })
 
 
 // $route post api/users/register
@@ -24,7 +24,7 @@ router.post('/register',(req,res)=>{
     // 查询数据库中是否有邮箱
     User.findOne({email: req.body.email}).then(user=>{
         if(user){
-            return res.status(400).json({email: '邮箱已被注册！'})
+            return res.status(400).json('邮箱已被注册！')
         }else{
             // 获取默认头像   gravatar插件
             const img = gravatar.url(req.body.email, {s: '200', r: 'pg', d: 'mm'});
@@ -32,7 +32,8 @@ router.post('/register',(req,res)=>{
                 name: req.body.name,
                 email: req.body.email,
                 passwd: req.body.passwd,
-                avatar: img
+                avatar: img,
+                identity: req.body.identity
             })
             // bcrypt 密码加密
             bcrypt.genSalt(10, function(err, salt) {
@@ -59,13 +60,18 @@ router.post('/login',(req,res)=>{
     User.findOne({email})
         .then(user=>{
             if(!user){
-                return res.status(400).json({email: '用户不存在！'})
+                return res.status(400).json('用户不存在！')
             }
             //密码匹配
             bcrypt.compare(passwd, user.passwd)
                 .then(isMatch=>{
                     if(isMatch){
-                        const rule = {id: user.id,name:user.name}
+                        const rule = {
+                            id: user.id,
+                            name:user.name,
+                            avatar: user.avatar,
+                            identity: user.identity
+                        }
                         // jwt.sign(规则，secret，过期时间，箭头函数)
                         jwt.sign(rule,secret,{expiresIn: 3600},(err,token)=>{
                             if(err) throw err
@@ -76,7 +82,7 @@ router.post('/login',(req,res)=>{
                             })
                         })
                     }else{
-                        return res.status(400).json({msg: '密码不正确！'})
+                        return res.status(400).json( '密码不正确！')
                     }
                 })
         })
@@ -93,7 +99,8 @@ router.get('/current',passport.authenticate('jwt',{session:false}),(req,res)=>{
     res.json({
         id: req.user.id,
         name: req.user.name,
-        email: req.user.email
+        email: req.user.email,
+        identity: req.user.identity
     })
 })
 

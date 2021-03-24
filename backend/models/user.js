@@ -18,9 +18,13 @@ const UserSchema = new Schema({
     avatar:{
         type: String
     },
+    identity: {
+        // 0 普通员工   1 管理员
+        type: Number
+    },
     date:{
         type: Date,
-        default: new Date()
+        default: Date.now
     },
 })
 
