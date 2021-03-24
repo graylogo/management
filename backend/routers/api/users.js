@@ -7,7 +7,6 @@ const jwt  = require('jsonwebtoken');
 const {secret} = require('../../config/keys')
 const User = require('../../models/user')
 const passport = require('passport');
-const { session } = require('passport');
 
 // $route GET api/users/test
 // @desc  返回请求的JSON数据
@@ -95,7 +94,6 @@ router.post('/login',(req,res)=>{
 //     res.json({msg: 'success!'})
 // })
 router.get('/current',passport.authenticate('jwt',{session:false}),(req,res)=>{
-    console.log(req.user);
     res.json({
         id: req.user.id,
         name: req.user.name,
