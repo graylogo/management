@@ -3,6 +3,8 @@ const express = require('express')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const gravatar = require('gravatar');
+const jwt  = require('jsonwebtoken');
+const {secret} = require('../../config/keys')
 const User = require('../../models/user')
 
 // $route GET api/users/test
@@ -61,7 +63,15 @@ router.post('/login',(req,res)=>{
             bcrypt.compare(passwd, user.passwd)
                 .then(isMatch=>{
                     if(isMatch){
-                        res.json({msg: 'success'})
+                        const rule = {id: user.id,name:user.name}
+                        // jwt.sign(规则，secret，过期时间，箭头函数)
+                        jwt.sign(rule,secret,{expiresIn: 3600},(err,token)=>{
+                            if(err) throw err
+                            res.json({
+                                success: true,
+                                token: token
+                            })
+                        })
                     }else{
                         return res.status(400).json({msg: '密码不正确！'})
                     }
