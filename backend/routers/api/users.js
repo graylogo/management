@@ -6,6 +6,8 @@ const gravatar = require('gravatar');
 const jwt  = require('jsonwebtoken');
 const {secret} = require('../../config/keys')
 const User = require('../../models/user')
+const passport = require('passport');
+const { session } = require('passport');
 
 // $route GET api/users/test
 // @desc  返回请求的JSON数据
@@ -67,9 +69,10 @@ router.post('/login',(req,res)=>{
                         // jwt.sign(规则，secret，过期时间，箭头函数)
                         jwt.sign(rule,secret,{expiresIn: 3600},(err,token)=>{
                             if(err) throw err
+                            // token    前面区许家山特定字段  Bearer
                             res.json({
                                 success: true,
-                                token: token
+                                token: "Bearer "+token
                             })
                         })
                     }else{
@@ -78,4 +81,20 @@ router.post('/login',(req,res)=>{
                 })
         })
 })
+
+// $route get api/users/current
+// @desc  current user
+// access  Private
+// router.get('/current','验证token',(req,res)=>{
+//     res.json({msg: 'success!'})
+// })
+router.get('/current',passport.authenticate('jwt',{session:false}),(req,res)=>{
+    console.log(req.user);
+    res.json({
+        id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+    })
+})
+
 module.exports = router
