@@ -44,4 +44,28 @@ router.post('/register',(req,res)=>{
     })
 })
 
+
+// $route post api/users/login
+// @desc  登陆接口  返回token    jwt
+// access  public
+router.post('/login',(req,res)=>{
+    const email = req.body.email
+    const passwd = req.body.passwd
+    // 查询数据库
+    User.findOne({email})
+        .then(user=>{
+            if(!user){
+                return res.status(400).json({email: '用户不存在！'})
+            }
+            //密码匹配
+            bcrypt.compare(passwd, user.passwd)
+                .then(isMatch=>{
+                    if(isMatch){
+                        res.json({msg: 'success'})
+                    }else{
+                        return res.status(400).json({msg: '密码不正确！'})
+                    }
+                })
+        })
+})
 module.exports = router
