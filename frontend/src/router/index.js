@@ -39,4 +39,16 @@ const router = new VueRouter({
   routes
 });
 
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const isLogin = !!localStorage.getItem('eleToken');
+  if (to.path === '/login' || to.path === '/register') {
+    next();
+  } else if (isLogin) {
+    next();
+  } else {
+    next('/login');
+  }
+});
+
 export default router;
