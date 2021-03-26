@@ -1,27 +1,24 @@
 <template>
   <div class="container">
-        index
+    <el-button
+      type="danger"
+      :loading="true"
+    >按钮</el-button>
+    <div></div>
   </div>
 </template>
 
 <script>
 export default {
-name: 'Index',
-components: {},
+  name: 'Index',
+  components: {},
   data() {
-    return {
-
-    }
+    return {};
   },
-  created() {
-
-  },
-  methods: {
-
-  }
-}
+  created() {},
+  methods: {},
+};
 </script>
 
 <style scoped lang="scss">
-
 </style>
