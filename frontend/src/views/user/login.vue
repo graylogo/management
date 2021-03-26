@@ -5,11 +5,11 @@
         <el-form-item label="邮箱" prop="email">
             <el-input type="email" v-model="ruleForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码"></el-input>
+        <el-form-item label="密码" prop="passwd">
+            <el-input type="password" v-model="ruleForm.passwd" autocomplete="off" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="submitForm('ruleForm')">注册</el-button>
+            <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
             <el-button type="text"><a href="/register">去注册</a></el-button>
         </el-form-item>
 </el-form>
@@ -30,16 +30,14 @@ export default {
     return {
       ruleForm: {
         email: '',
-        pass: ''
+        passwd: ''
       },
       rules: {
-        name: [
-          { required: true, trigger: 'blur', message: '用户名为必填' },
-          {
-            min: 4, max: 10, message: '长度在 4 到 10 个字符', trigger: 'blur'
-          }
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'bulr' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
-        pass: [
+        passwd: [
           { validator: validatePass, trigger: 'blur' }
         ]
       }
@@ -52,11 +50,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('submit!');
-          console.log(this.ruleForm);
-          return false;
+          this.axios.post('/api/users/login', this.ruleForm).then((res) => {
+            const { token } = res.data;
+            localStorage.setItem('eleToken', token);
+            this.$router.push('/');
+          });
         }
-        console.log('error submit!!');
         return false;
       });
     }

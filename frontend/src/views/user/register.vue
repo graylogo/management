@@ -8,8 +8,8 @@
         <el-form-item label="邮箱" prop="email">
             <el-input type="email" v-model="ruleForm.email" autocomplete="off" placeholder="请输入邮箱"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
-            <el-input type="password" v-model="ruleForm.pass" autocomplete="off" placeholder="请输入密码"></el-input>
+        <el-form-item label="密码" prop="passwd">
+            <el-input type="password" v-model="ruleForm.passwd" autocomplete="off" placeholder="请输入密码"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPass">
             <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off" placeholder="请确认密码"></el-input>
@@ -48,7 +48,7 @@ export default {
     const validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.ruleForm.passwd) {
         callback(new Error('两次输入密码不一致!'));
       } else {
         callback();
@@ -58,7 +58,7 @@ export default {
       ruleForm: {
         name: '',
         email: '',
-        pass: '',
+        passwd: '',
         checkPass: '',
         identity: 0
       },
@@ -69,7 +69,7 @@ export default {
             min: 4, max: 10, message: '长度在 4 到 10 个字符', trigger: 'blur'
           }
         ],
-        pass: [
+        passwd: [
           { validator: validatePass, trigger: 'blur' }
         ],
         checkPass: [
@@ -89,11 +89,16 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log('submit!');
-          console.log(this.ruleForm);
-          return false;
+          this.axios.post('/api/users/register', this.ruleForm)
+            .then((res) => {
+              this.$message({
+                type: 'success',
+                message: '账号注册成功！'
+              });
+              this.$router.push('/login');
+            })
+            .catch((err) => { console.log(err); });
         }
-        console.log('error submit!!');
         return false;
       });
     }
