@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Loading, Message } from 'element-ui';
-import router from './http';
+import router from './router';
 
 let loading;
 function startLoading() {

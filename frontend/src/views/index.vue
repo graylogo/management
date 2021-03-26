@@ -2,7 +2,6 @@
   <div class="container">
     <el-button
       type="danger"
-      :loading="true"
     >按钮</el-button>
     <div></div>
   </div>
@@ -16,7 +15,7 @@ export default {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {}
 };
 </script>
 

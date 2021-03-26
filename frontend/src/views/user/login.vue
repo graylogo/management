@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import jwt_decode from 'jwt-decode';
+
 export default {
   name: 'Register',
   components: {},
@@ -53,11 +55,23 @@ export default {
           this.axios.post('/api/users/login', this.ruleForm).then((res) => {
             const { token } = res.data;
             localStorage.setItem('eleToken', token);
+            // 解析token
+            const decode = jwt_decode(token);
+            this.$store.dispatch('setAuthenticated', !this.isEmpty(decode));
+            this.$store.dispatch('setUser', decode);
             this.$router.push('/');
           });
         }
         return false;
       });
+    },
+    isEmpty(val) {
+      return (
+        val === undefined ||
+            val === null ||
+            (typeof val === 'object' && Object.keys(val).length === 0) ||
+            (typeof val === 'string' && val.trim().length === 0)
+      );
     }
   }
 };
