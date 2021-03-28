@@ -42,7 +42,7 @@ export default {
     handleCommand(val) {
       switch (val) {
         case 'info':
-          console.log('info');
+          this.$router.push('/userDetail');
           break;
         case 'logOut':
           localStorage.removeItem('eleToken');

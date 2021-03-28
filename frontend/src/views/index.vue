@@ -72,8 +72,10 @@ body{
   }
 
   .el-main {
-    background-color: #E9EEF3;
+    background-color: #D3DCE6;
     color: #333;
+    margin: 20px;
+    padding: 0
   }
 
   body > .el-container {

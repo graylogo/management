@@ -25,7 +25,7 @@ router.post('/add',passport.authenticate('jwt',{session:false}),(req,res)=>{
     if(req.body.remark) profileDetail.remark = req.body.remark
     new profile(profileDetail).save().then(profile=>{
         res.json(profile)
-    })
+    }).catch(err=>res.status(400).json('添加失败，请重试。'))
 })
 
 // $route post api/profile/
@@ -38,7 +38,7 @@ router.get('/',passport.authenticate('jwt',{session:false}),(req,res,next)=>{
        }
        res.json(profile)
    }).catch(err=>res.status(400).json(err))
-   next()
+//    next()
 })
 
 // $route post api/profile/:id

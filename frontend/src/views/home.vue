@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-        Home
+       <h1>欢迎使用本系统！</h1>
   </div>
 </template>
 
@@ -25,6 +25,13 @@ export default {
 .container{
     width: 100%;
     height: 100%;
-    background-color: pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('../assets/logo.png')  no-repeat ;
+    background-size: contain;
+    h1{
+        font-size: 32px;
+    }
 }
 </style>
